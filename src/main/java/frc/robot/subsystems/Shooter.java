@@ -6,29 +6,44 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
-  private CANSparkMax topShootMotor = new CANSparkMax(ShooterConstants.topShootMotorID, MotorType.kBrushless);
-  private CANSparkMax bottomShootMotor = new CANSparkMax(ShooterConstants.bottomShootMotorID, MotorType.kBrushless);
+  private SparkMax topShootMotor = new SparkMax(ShooterConstants.topShootMotorID, MotorType.kBrushless);
+  private SparkMax bottomShootMotor = new SparkMax(ShooterConstants.bottomShootMotorID, MotorType.kBrushless);
 
-  private RelativeEncoder topShootEncoder = topShootMotor.getEncoder();
+  private SparkMaxConfig topShootMotorConfig = new SparkMaxConfig();
+  private SparkMaxConfig bottomShootMotorConfig = new SparkMaxConfig();
 
   /** Creates a new Shooter. */
   public Shooter() {
-    topShootMotor.restoreFactoryDefaults();
-    bottomShootMotor.restoreFactoryDefaults();
+    topShootMotorConfig.idleMode(IdleMode.kBrake);
+    bottomShootMotorConfig.idleMode(IdleMode.kBrake);
 
-    topShootMotor.setIdleMode(IdleMode.kBrake);
-    bottomShootMotor.setIdleMode(IdleMode.kBrake);
+    topShootMotorConfig.smartCurrentLimit(ShooterConstants.currentLimit);
+    bottomShootMotorConfig.smartCurrentLimit(ShooterConstants.currentLimit);
 
-    topShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
-    bottomShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+    bottomShootMotorConfig.follow(ShooterConstants.topShootMotorID);
 
-    bottomShootMotor.follow(topShootMotor);
+    topShootMotor.configure(topShootMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    bottomShootMotor.configure(bottomShootMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
+    // topShootMotor.restoreFactoryDefaults();
+    // bottomShootMotor.restoreFactoryDefaults();
+
+    // topShootMotor.setIdleMode(IdleMode.kBrake);
+    // bottomShootMotor.setIdleMode(IdleMode.kBrake);
+
+    // topShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+    // bottomShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
+
+    // bottomShootMotor.follow(topShootMotor);
   }
 
   public void spinShooter(double speed) {
@@ -36,7 +51,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady() {
-    return -topShootEncoder.getVelocity() > ShooterConstants.targetFlywheelVelocity;
+    return -topShootMotor.configAccessor.encoder.getVelocityConversionFactor() > ShooterConstants.targetFlywheelVelocity;
   }
 
   public void stopShooter() {
