@@ -56,8 +56,6 @@ public class Arm extends SubsystemBase {
     leftArmMotorConfig.follow(ArmConstants.rightArmMotorID);
 
     rightArmMotorConfig.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
-    // I can't figure out what the default value here is lol
-    // rightArmMotorConfig.limitSwitch.reverseLimitSwitchEnabled(true);
 
     rightArmMotor.configure(rightArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     leftArmMotor.configure(leftArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
