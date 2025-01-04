@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -18,16 +19,13 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.*;
 
-public class Arm extends ProfiledPIDSubsystem {
+public class Arm extends SubsystemBase {
   private SparkMax leftArmMotor = new SparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
   private SparkMax rightArmMotor = new SparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
-
-  private SparkMaxConfig leftArmMotorConfig = new SparkMaxConfig();
-  private SparkMaxConfig rightArmMotorConfig = new SparkMaxConfig();
 
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
   private ArmFeedforward feedforward = new ArmFeedforward(FeedForwardValues.kS, FeedForwardValues.kG,
@@ -39,16 +37,17 @@ public class Arm extends ProfiledPIDSubsystem {
   @SuppressWarnings("unused")
   private SparkLimitSwitch rightReverseLimitSwitch;
 
+  private ProfiledPIDController pidController = new ProfiledPIDController(
+      PIDValues.p,
+      PIDValues.i,
+      PIDValues.d,
+      // The motion profile constraints
+      new TrapezoidProfile.Constraints(6, 5));
+
   /** Creates a new ProfPIDArm. */
   public Arm() {
-    super(
-        // The ProfiledPIDController used by the subsystem
-        new ProfiledPIDController(
-            PIDValues.p,
-            PIDValues.i,
-            PIDValues.d,
-            // The motion profile constraints
-            new TrapezoidProfile.Constraints(6, 5)));
+    SparkMaxConfig leftArmMotorConfig = new SparkMaxConfig();
+    SparkMaxConfig rightArmMotorConfig = new SparkMaxConfig();
 
     leftArmMotorConfig.idleMode(IdleMode.kBrake);
     rightArmMotorConfig.idleMode(IdleMode.kBrake);
@@ -56,26 +55,17 @@ public class Arm extends ProfiledPIDSubsystem {
     rightArmMotorConfig.inverted(true);
     leftArmMotorConfig.follow(ArmConstants.rightArmMotorID);
 
+    rightArmMotorConfig.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
+    // I can't figure out what the default value here is lol
+    // rightArmMotorConfig.limitSwitch.reverseLimitSwitchEnabled(true);
+
     rightArmMotor.configure(rightArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     leftArmMotor.configure(leftArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
-    // leftArmMotor.restoreFactoryDefaults();
-    // rightArmMotor.restoreFactoryDefaults();
 
-    // leftArmMotor.setIdleMode(IdleMode.kBrake);
-    // rightArmMotor.setIdleMode(IdleMode.kBrake);
-
-    // rightArmMotor.setInverted(true);
-    // leftArmMotor.follow(rightArmMotor, true);
-
-    rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
-
-    setGoal(getEncoderRadians());
-    enable();
+    this.pidController.setGoal(getEncoderRadians());
   }
 
-  @Override
-  public void useOutput(double output, TrapezoidProfile.State setpoint) {
+  private void useOutput(double output, TrapezoidProfile.State setpoint) {
     ffOutput = -feedforward.calculate(setpoint.position, setpoint.velocity);
     output = -output;
     rightArmMotor.setVoltage(ffOutput + output);
@@ -92,7 +82,7 @@ public class Arm extends ProfiledPIDSubsystem {
   public void setTarget(double target, boolean podium) {
     // ArmPositions.upper is lower than ArmPositions.lower
     this.podium = podium;
-    this.setGoal(MathUtil.clamp(target, ArmPositions.lowerRad, ArmPositions.upperRad));
+    this.pidController.setGoal(MathUtil.clamp(target, ArmPositions.lowerRad, ArmPositions.upperRad));
   }
 
   public void setTargetRotations(double target) {
@@ -104,7 +94,7 @@ public class Arm extends ProfiledPIDSubsystem {
       podium = false;
     }
 
-    setTarget(this.getController().getGoal().position + delta, podium);
+    setTarget(this.pidController.getGoal().position + delta, podium);
   }
 
   public void armPodium() {
@@ -131,7 +121,6 @@ public class Arm extends ProfiledPIDSubsystem {
     return getEncoder() * 2 * Math.PI;
   }
 
-  @Override
   public double getMeasurement() {
     // Return the process variable measurement here
     return getEncoderRadians();
@@ -139,9 +128,9 @@ public class Arm extends ProfiledPIDSubsystem {
 
   @Override
   public void periodic() {
-    super.periodic();
+    useOutput(pidController.calculate(getMeasurement()), pidController.getSetpoint());
 
-    SmartDashboard.putNumber("ArmGoal", this.getController().getGoal().position);
+    SmartDashboard.putNumber("ArmGoal", this.pidController.getGoal().position);
     SmartDashboard.putNumber("pos", getMeasurement());
     // SmartDashboard.putNumber("encoder", getEncoder());
   }
