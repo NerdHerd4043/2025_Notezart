@@ -5,10 +5,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -20,8 +23,12 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.*;
 
 public class Arm extends ProfiledPIDSubsystem {
-  private CANSparkMax leftArmMotor = new CANSparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
-  private CANSparkMax rightArmMotor = new CANSparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
+  private SparkMax leftArmMotor = new SparkMax(ArmConstants.leftArmMotorID, MotorType.kBrushless);
+  private SparkMax rightArmMotor = new SparkMax(ArmConstants.rightArmMotorID, MotorType.kBrushless);
+
+  private SparkMaxConfig leftArmMotorConfig = new SparkMaxConfig();
+  private SparkMaxConfig rightArmMotorConfig = new SparkMaxConfig();
+
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
   private ArmFeedforward feedforward = new ArmFeedforward(FeedForwardValues.kS, FeedForwardValues.kG,
       FeedForwardValues.kV);
@@ -43,14 +50,23 @@ public class Arm extends ProfiledPIDSubsystem {
             // The motion profile constraints
             new TrapezoidProfile.Constraints(6, 5)));
 
-    leftArmMotor.restoreFactoryDefaults();
-    rightArmMotor.restoreFactoryDefaults();
+    leftArmMotorConfig.idleMode(IdleMode.kBrake);
+    rightArmMotorConfig.idleMode(IdleMode.kBrake);
 
-    leftArmMotor.setIdleMode(IdleMode.kBrake);
-    rightArmMotor.setIdleMode(IdleMode.kBrake);
+    rightArmMotorConfig.inverted(true);
+    leftArmMotorConfig.follow(ArmConstants.rightArmMotorID);
 
-    rightArmMotor.setInverted(true);
-    leftArmMotor.follow(rightArmMotor, true);
+    rightArmMotor.configure(rightArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    leftArmMotor.configure(leftArmMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
+    // leftArmMotor.restoreFactoryDefaults();
+    // rightArmMotor.restoreFactoryDefaults();
+
+    // leftArmMotor.setIdleMode(IdleMode.kBrake);
+    // rightArmMotor.setIdleMode(IdleMode.kBrake);
+
+    // rightArmMotor.setInverted(true);
+    // leftArmMotor.follow(rightArmMotor, true);
 
     rightReverseLimitSwitch = rightArmMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed);
 

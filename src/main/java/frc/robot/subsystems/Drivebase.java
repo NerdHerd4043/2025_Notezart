@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
+import com.studica.frc.AHRS;
 
 import cowlib.SwerveModule;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -38,7 +40,7 @@ public class Drivebase extends SubsystemBase {
 
   private final double MAX_VOLTAGE = 12;
 
-  private AHRS gyro;
+  private final AHRS gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
 
   private SwerveModule frontLeft = new SwerveModule(SwerveModules.frontLeft, MAX_VELOCITY, MAX_VOLTAGE);
   private SwerveModule frontRight = new SwerveModule(SwerveModules.frontRight, MAX_VELOCITY, MAX_VOLTAGE);

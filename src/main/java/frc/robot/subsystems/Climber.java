@@ -4,21 +4,26 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  private CANSparkMax climbMotor = new CANSparkMax(ClimberConstants.climberMotorID, MotorType.kBrushless);
+  private SparkMax climbMotor = new SparkMax(ClimberConstants.climberMotorID, MotorType.kBrushless);
+
+  private SparkMaxConfig climbMotorConfig = new SparkMaxConfig();
 
   public Climber() {
-    climbMotor.restoreFactoryDefaults();
+    climbMotorConfig.idleMode(IdleMode.kBrake);
 
-    climbMotor.setIdleMode(IdleMode.kBrake);
+    climbMotor.configure(climbMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void runClimber(double motorSpeed) {

@@ -5,9 +5,9 @@
 package cowlib;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,8 +19,8 @@ import frc.robot.Constants.DriveConstants.SwervePID;
 
 /** Add your docs here. */
 public class SwerveModule {
-  private CANSparkMax angleMotor;
-  private CANSparkMax speedMotor;
+  private SparkMax angleMotor;
+  private SparkMax speedMotor;
   private RelativeEncoder speedEncoder;
   private PIDController pidController;
   private CANcoder encoder;
@@ -29,8 +29,8 @@ public class SwerveModule {
 
   public SwerveModule(int angleMotorId, int speedMotorId, int encoderId, boolean driveInverted,
       double maxVelocity, double maxVoltage) {
-    this.angleMotor = new CANSparkMax(angleMotorId, MotorType.kBrushless);
-    this.speedMotor = new CANSparkMax(speedMotorId, MotorType.kBrushless);
+    this.angleMotor = new SparkMax(angleMotorId, MotorType.kBrushless);
+    this.speedMotor = new SparkMax(speedMotorId, MotorType.kBrushless);
     this.pidController = new PIDController(SwervePID.p, SwervePID.i, SwervePID.d);
     this.encoder = new CANcoder(encoderId);
     this.maxVelocity = maxVelocity;
