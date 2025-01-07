@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 2.215479189792722,
-        "y": 1.875296531109494
+        "y": 1.8752965311094945
       },
       "nextControl": {
         "x": 7.480526124947738,
@@ -57,7 +57,7 @@
       },
       "nextControl": {
         "x": 3.15163347666363,
-        "y": 1.8914530940700833
+        "y": 1.8914530940700838
       },
       "isLocked": false,
       "linkedName": null
@@ -69,7 +69,7 @@
       },
       "prevControl": {
         "x": 2.0109117652914668,
-        "y": 1.8524540612026612
+        "y": 1.8524540612026614
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,21 +78,21 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2,
-      "rotationDegrees": 23.45902408146147,
-      "rotateFast": false
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 0.8,
-      "rotationDegrees": 0,
-      "rotateFast": false
+      "waypointRelativePos": 2,
+      "rotationDegrees": 23.45902408146147
     }
   ],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "New Event Marker",
       "waypointRelativePos": 1.65,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -110,6 +110,7 @@
     {
       "name": "New Event Marker",
       "waypointRelativePos": 2.7,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -129,18 +130,19 @@
     "maxVelocity": 4.5,
     "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -60.25511870305777,
-    "rotateFast": false
+    "rotation": -60.25511870305777
   },
   "reversed": false,
   "folder": "Center Field",
-  "previewStartingState": {
-    "rotation": -61.38954033403478,
-    "velocity": 0
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

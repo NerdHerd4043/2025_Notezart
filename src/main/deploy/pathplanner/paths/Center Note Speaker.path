@@ -1,5 +1,5 @@
 {
-  "version": 1.0,
+  "version": "2025.0",
   "waypoints": [
     {
       "anchor": {
@@ -36,7 +36,7 @@
         "y": 5.5600000000000005
       },
       "prevControl": {
-        "x": 1.359332628131514,
+        "x": 1.16,
         "y": 5.5600000000000005
       },
       "nextControl": null,
@@ -46,10 +46,12 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Intake on",
       "waypointRelativePos": 0.25,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -67,6 +69,7 @@
     {
       "name": "intake off",
       "waypointRelativePos": 1.7,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
         "data": {
@@ -86,18 +89,19 @@
     "maxVelocity": 3.0,
     "maxAcceleration": 2.75,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 1.3802519747870992,
-    "rotateFast": false
+    "rotation": 1.3802519747870992
   },
   "reversed": false,
   "folder": "Speaker",
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }
