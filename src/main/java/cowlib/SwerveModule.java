@@ -7,7 +7,10 @@ package cowlib;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,6 +34,13 @@ public class SwerveModule {
       double maxVelocity, double maxVoltage) {
     this.angleMotor = new SparkMax(angleMotorId, MotorType.kBrushless);
     this.speedMotor = new SparkMax(speedMotorId, MotorType.kBrushless);
+
+    final SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
+    final SparkMaxConfig speedMotorConfig = new SparkMaxConfig();
+
+    angleMotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    speedMotor.configure(speedMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
     this.pidController = new PIDController(SwervePID.p, SwervePID.i, SwervePID.d);
     this.encoder = new CANcoder(encoderId);
     this.maxVelocity = maxVelocity;
@@ -38,16 +48,15 @@ public class SwerveModule {
 
     this.pidController.enableContinuousInput(-180, 180);
 
-    this.speedMotor.setInverted(driveInverted);
+    // this.speedMotor.setInverted(driveInverted);
+    speedMotorConfig.inverted(true);
+    
 
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
     double driveReduction = 1.0 / 6.75;
     double WHEEL_DIAMETER = 0.1016;
     double rotationsToDistance = driveReduction * WHEEL_DIAMETER * Math.PI;
-
-    this.speedEncoder.setPositionConversionFactor(rotationsToDistance);
-    this.speedEncoder.setVelocityConversionFactor(rotationsToDistance / 60);
   }
 
   public SwerveModule(SwerveModuleConfig config, double maxVelocity, double maxVoltage) {
@@ -57,9 +66,6 @@ public class SwerveModule {
         config.drive_inverted,
         maxVelocity,
         maxVoltage);
-
-    angleMotor.setSmartCurrentLimit(DriveConstants.currentLimit);
-    speedMotor.setSmartCurrentLimit(DriveConstants.currentLimit);
   }
 
   private void drive(double speedMetersPerSecond, double angle) {

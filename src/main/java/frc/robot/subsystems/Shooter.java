@@ -33,17 +33,6 @@ public class Shooter extends SubsystemBase {
 
     topShootMotor.configure(topShootMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     bottomShootMotor.configure(bottomShootMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
-    // topShootMotor.restoreFactoryDefaults();
-    // bottomShootMotor.restoreFactoryDefaults();
-
-    // topShootMotor.setIdleMode(IdleMode.kBrake);
-    // bottomShootMotor.setIdleMode(IdleMode.kBrake);
-
-    // topShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
-    // bottomShootMotor.setSmartCurrentLimit(ShooterConstants.currentLimit);
-
-    // bottomShootMotor.follow(topShootMotor);
   }
 
   public void spinShooter(double speed) {
@@ -51,7 +40,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isReady() {
-    return -topShootMotor.configAccessor.encoder.getVelocityConversionFactor() > ShooterConstants.targetFlywheelVelocity;
+    return -topShootMotor.configAccessor.encoder
+        .getVelocityConversionFactor() > ShooterConstants.targetFlywheelVelocity;
   }
 
   public void stopShooter() {
