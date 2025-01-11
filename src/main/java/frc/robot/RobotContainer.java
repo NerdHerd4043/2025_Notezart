@@ -52,12 +52,12 @@ public class RobotContainer {
   private final AHRS gyro = new AHRS();
   private final DigitalInput beamBreak = new DigitalInput(0);
 
-  private final Drivebase drivebase = new Drivebase(gyro);
-  private final Arm arm = new Arm();
+  private final Drivebase drivebase = new Drivebase();
+  // private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  private final Climber climber = new Climber();
-  private final CANdleSystem candle = new CANdleSystem();
+  // private final Climber climber = new Climber();
+  // private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
 
@@ -85,15 +85,15 @@ public class RobotContainer {
             () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
-    arm.setDefaultCommand(
-        new MoveArm(arm,
-            () -> getArmControl(driveStick.getRightTriggerAxis() -
-                driveStick.getLeftTriggerAxis())));
+    // arm.setDefaultCommand(
+    // new MoveArm(arm,
+    // () -> getArmControl(driveStick.getRightTriggerAxis() -
+    // driveStick.getLeftTriggerAxis())));
 
-    candle.setDefaultCommand(
-        candle.getDefaultCommand(
-            shooter::isReady,
-            this::hasNote));
+    // candle.setDefaultCommand(
+    // candle.getDefaultCommand(
+    // shooter::isReady,
+    // this::hasNote));
 
     configureBindings();
   }
@@ -111,17 +111,17 @@ public class RobotContainer {
     }
   }
 
-  private double getArmControl(double trigger) {
-    if (trigger > 0) {
-      mapped = trigger * ArmConstants.raiseArmSpeed;
-    } else if (trigger < 0) {
-      mapped = -trigger * ArmConstants.lowerArmSpeed;
-    } else {
-      mapped = 0;
-    }
+  // private double getArmControl(double trigger) {
+  // if (trigger > 0) {
+  // mapped = trigger * ArmConstants.raiseArmSpeed;
+  // } else if (trigger < 0) {
+  // mapped = -trigger * ArmConstants.lowerArmSpeed;
+  // } else {
+  // mapped = 0;
+  // }
 
-    return mapped;
-  }
+  // return mapped;
+  // }
 
   private double[] getXY() {
     double[] xy = new double[2];
@@ -229,16 +229,16 @@ public class RobotContainer {
                     new Rumble(driveStick, beamBreak, shooter::isReady)),
                 new WaitCommand(0.5))));
 
-    // Set arm to podium angle
-    c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
+    // // Set arm to podium angle
+    // c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
 
     // Spit out note
     c_driveStick.start()
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
 
     // Driver climb controls
-    c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
-    c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
+    // c_driveStick.x().whileTrue(new Climb(climber, 1)); // climber up
+    // c_driveStick.b().whileTrue(new Climb(climber, -1)); // climber down
 
     // Codriver climb controls
     // c_driveStick2.y().whileTrue(new Climb(climber, 1));
@@ -250,11 +250,11 @@ public class RobotContainer {
         Commands.sequence(Commands.waitSeconds(0.80),
             Commands.race(new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
 
-    var armUp = Commands.sequence(
-        Commands.runOnce(arm::armUp, arm),
-        Commands.waitSeconds(0.75));
+    // var armUp = Commands.sequence(
+    // Commands.runOnce(arm::armUp, arm),
+    // Commands.waitSeconds(0.75));
 
-    var armDown = Commands.runOnce(arm::armDown, arm);
+    // var armDown = Commands.runOnce(arm::armDown, arm);
 
     // var armDown = Commands.race(
     // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
@@ -279,15 +279,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("Stop Intake",
         new RunIntake(intake, 0, 0));
     NamedCommands.registerCommand("Shoot", shootComp);
-    NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
-        armDown));
+    // NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
+    // armDown));
     NamedCommands.registerCommand("Defence Shoot", defenceShoot);
     NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
   }
 
-  public void ledsOff() {
-    candle.ledsOff();
-  }
+  // public void ledsOff() {
+  // candle.ledsOff();
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

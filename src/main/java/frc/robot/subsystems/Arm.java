@@ -68,9 +68,6 @@ public class Arm extends SubsystemBase {
     ffOutput = -feedforward.calculate(setpoint.position, setpoint.velocity);
     output = -output;
     rightArmMotor.setVoltage(ffOutput + output);
-    // SmartDashboard.putNumber("Fead Firword", ffOutput);
-    // SmartDashboard.putNumber("Arm PID output", output);
-    // SmartDashboard.putNumber("PID + FF", ffOutput + output);
   }
 
   public void setTarget(double target) {
