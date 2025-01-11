@@ -12,7 +12,6 @@ public class RunIntake extends Command {
   public final Intake intake;
   public final double intakeMotorSpeed;
   public final double kickupMotorSpeed;
-  
 
   public RunIntake(Intake intake, double intakeMotorSpeed, double kickupMotorSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -25,7 +24,8 @@ public class RunIntake extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

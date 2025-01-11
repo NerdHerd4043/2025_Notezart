@@ -16,22 +16,24 @@ import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
-  private SparkMax climbMotor = new SparkMax(ClimberConstants.climberMotorID, MotorType.kBrushless);
+  // private SparkMax climbMotor = new SparkMax(ClimberConstants.climberMotorID,
+  // MotorType.kBrushless);
 
-  private SparkMaxConfig climbMotorConfig = new SparkMaxConfig();
+  // private SparkMaxConfig climbMotorConfig = new SparkMaxConfig();
 
   public Climber() {
-    climbMotorConfig.idleMode(IdleMode.kBrake);
+    // climbMotorConfig.idleMode(IdleMode.kBrake);
 
-    climbMotor.configure(climbMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // climbMotor.configure(climbMotorConfig, ResetMode.kResetSafeParameters,
+    // PersistMode.kPersistParameters);
   }
 
   public void runClimber(double motorSpeed) {
-    climbMotor.set(motorSpeed);
+    // climbMotor.set(motorSpeed);
   }
 
   public void stopClimber() {
-    climbMotor.stopMotor();
+    // climbMotor.stopMotor();
   }
 
   @Override

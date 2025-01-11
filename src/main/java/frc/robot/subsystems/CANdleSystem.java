@@ -20,11 +20,11 @@ import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 
 public class CANdleSystem extends SubsystemBase {
-  private final CANdle candle = new CANdle(CANdleConstants.id, "rio");
+  // private final CANdle candle = new CANdle(CANdleConstants.id, "rio");
 
   public enum AnimationType {
-    ColorFlow,
-    Flash,
+    // ColorFlow,
+    // Flash,
   }
 
   /*
@@ -45,83 +45,85 @@ public class CANdleSystem extends SubsystemBase {
 
   /** Creates a new CANdle. */
   public CANdleSystem() {
-    CANdleConfiguration config = new CANdleConfiguration();
+    // CANdleConfiguration config = new CANdleConfiguration();
 
-    config.statusLedOffWhenActive = true;
-    config.disableWhenLOS = true;
-    config.stripType = LEDStripType.GRB;
-    config.brightnessScalar = 0.8;
-    config.vBatOutputMode = VBatOutputMode.On;
+    // config.statusLedOffWhenActive = true;
+    // config.disableWhenLOS = true;
+    // config.stripType = LEDStripType.GRB;
+    // config.brightnessScalar = 0.8;
+    // config.vBatOutputMode = VBatOutputMode.On;
 
-    setBlue();
+    // setBlue();
 
-    candle.configAllSettings(config);
+    // candle.configAllSettings(config);
   }
 
-  public AnimationType getCurrentAnimation() {
-    return currentAnimation;
-  }
+  // public AnimationType getCurrentAnimation() {
+  // return currentAnimation;
+  // }
 
   public void setColors(int r, int g, int b) {
-    this.r = r;
-    this.g = g;
-    this.b = b;
+    // this.r = r;
+    // this.g = g;
+    // this.b = b;
   }
 
   public void setOrange() {
-    setColors(255, 25, 0);
-    changeAnimation(null);
+    // setColors(255, 25, 0);
+    // changeAnimation(null);
   }
 
   public void setBlue() {
-    setColors(0, 0, 255);
-    changeAnimation(null);
+    // setColors(0, 0, 255);
+    // changeAnimation(null);
   }
 
   public void setGreen() {
-    setColors(0, 255, 0);
-    changeAnimation(null);
+    // setColors(0, 255, 0);
+    // changeAnimation(null);
   }
 
-  public void setFlashing() {
-    changeAnimation(AnimationType.Flash);
-  }
+  // public void setFlashing() {
+  // changeAnimation(AnimationType.Flash);
+  // }
 
-  public Command getDefaultCommand(BooleanSupplier shooterReady, BooleanSupplier hasNote) {
-    return this.run(() -> {
-      if (!hasNote.getAsBoolean()) {
-        this.setBlue();
-      } else if (shooterReady.getAsBoolean()) {
-        this.setGreen();
-      } else {
-        this.setOrange();
-      }
-    }).ignoringDisable(true);
-  }
+  // public Command getDefaultCommand(BooleanSupplier shooterReady,
+  // BooleanSupplier hasNote) {
+  // return this.run(() -> {
+  // if (!hasNote.getAsBoolean()) {
+  // this.setBlue();
+  // } else if (shooterReady.getAsBoolean()) {
+  // this.setGreen();
+  // } else {
+  // this.setOrange();
+  // }
+  // }).ignoringDisable(true);
+  // }
 
-  public void changeAnimation(AnimationType toChange) {
-    currentAnimation = toChange;
+  // public void changeAnimation(AnimationType toChange) {
+  // currentAnimation = toChange;
 
-    if (currentAnimation != null) {
-      toAnimate = switch (currentAnimation) {
-        case ColorFlow -> new ColorFlowAnimation(128, 20, 70, 0, 0.7, CANdleConstants.ledCount, Direction.Forward, 8);
-        case Flash -> new StrobeAnimation(255, 0, 0);
-      };
-    }
-  }
+  // if (currentAnimation != null) {
+  // toAnimate = switch (currentAnimation) {
+  // case ColorFlow -> new ColorFlowAnimation(128, 20, 70, 0, 0.7,
+  // CANdleConstants.ledCount, Direction.Forward, 8);
+  // case Flash -> new StrobeAnimation(255, 0, 0);
+  // };
+  // }
+  // }
 
-  public void ledsOff() {
-    setColors(0, 0, 0);
-    changeAnimation(null);
-  }
+  // public void ledsOff() {
+  // setColors(0, 0, 0);
+  // changeAnimation(null);
+  // }
 
   @Override
   public void periodic() {
-    // INFO: If problems occur, switch this back to toAnimate
-    if (currentAnimation != null) {
-      candle.animate(toAnimate);
-    } else {
-      candle.setLEDs(r, g, b);
-    }
+    // // INFO: If problems occur, switch this back to toAnimate
+    // if (currentAnimation != null) {
+    // candle.animate(toAnimate);
+    // } else {
+    // candle.setLEDs(r, g, b);
+    // }
   }
 }

@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private SparkMax intakeMotor = new SparkMax(IntakeConstants.intakeMotorID, MotorType.kBrushless);
   private SparkMax kickupMotor = new SparkMax(IntakeConstants.kickupMotorID, MotorType.kBrushless);
-  
+
   private SparkMaxConfig intakeMotorConfig = new SparkMaxConfig();
   private SparkMaxConfig kickupMotorConfig = new SparkMaxConfig();
 
@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
 
     // intakeMotor.restoreFactoryDefaults();
     // kickupMotor.restoreFactoryDefaults();
-    
+
     // intakeMotor.setIdleMode(IdleMode.kCoast);
     // kickupMotor.setIdleMode(IdleMode.kBrake);
 
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
   }
 
   // public boolean getIntakeOn() {
-  //   return intakeMotor.get
+  // return intakeMotor.get
   // }
 
   @Override
