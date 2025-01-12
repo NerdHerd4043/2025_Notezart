@@ -66,7 +66,7 @@ public class RobotContainer {
   // CommandXboxController(1);
   private static CommandXboxController c_driveStick = new CommandXboxController(0);
 
-  private SendableChooser<Command> autoChooser;
+  // private SendableChooser<Command> autoChooser;
 
   private double mapped = 0;
 
@@ -77,8 +77,8 @@ public class RobotContainer {
     SignalLogger.enableAutoLogging(false);
 
     configureNamedCommands();
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Mode", autoChooser);
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("Auto Mode", autoChooser);
 
     // Configure the trigger bindings
     drivebase.setDefaultCommand(
@@ -295,8 +295,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return autoChooser.getSelected();
-  }
+  // public Command getAutonomousCommand() {
+  // // An example command will be run in autonomous
+  // return autoChooser.getSelected();
+  // }
 }

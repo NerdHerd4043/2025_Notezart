@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveConstants.SwervePID;
 
@@ -38,6 +39,8 @@ public class SwerveModule {
     final SparkMaxConfig angleMotorConfig = new SparkMaxConfig();
     final SparkMaxConfig speedMotorConfig = new SparkMaxConfig();
 
+    speedMotorConfig.inverted(driveInverted);
+
     angleMotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     speedMotor.configure(speedMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -50,7 +53,6 @@ public class SwerveModule {
 
     // this.speedMotor.setInverted(driveInverted);
     speedMotorConfig.inverted(true);
-    
 
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
