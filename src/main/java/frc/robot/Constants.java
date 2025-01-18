@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.ModuleConfig;
+
 import cowlib.SwerveModuleConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants.DriveConstants.ModuleLocations;
+import edu.wpi.first.math.system.plant.DCMotor;
+import com.pathplanner.lib.config.RobotConfig;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -26,6 +31,11 @@ public final class Constants {
     public static final int currentLimit = 40;
     public static final double slewRate = 20; // lower number for higher center of mass
     public static final int temp = 21;
+    private static final double DRIVE_REDUCTION = 1.0 / 6.75;
+    private static final double NEO_FREE_SPEED = 5820.0 / 60.0;
+    private static final double WHEEL_DIAMETER = 0.1016;
+    private static final double MAX_VELOCITY = NEO_FREE_SPEED * DRIVE_REDUCTION * WHEEL_DIAMETER * Math.PI;
+    private static final double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / (ModuleLocations.dist / Math.sqrt(2.0));
 
     public static final class SwervePID {
       public static final double p = 0.12;
@@ -48,6 +58,25 @@ public final class Constants {
       public static final Translation2d backLeft = new Translation2d(-dist, dist);
       public static final Translation2d backRight = new Translation2d(-dist, -dist);
     }
+  }
+
+  public static final class RobotConfigInfo {
+    public final ModuleConfig moduleConfig = new ModuleConfig(
+        DriveConstants.WHEEL_DIAMETER,
+        2.75,
+        0.7,
+        DCMotor.getNEO(1),
+        DriveConstants.DRIVE_REDUCTION,
+        DriveConstants.currentLimit,
+        1);
+
+    public RobotConfig robotConfig = new RobotConfig(
+        66.68, 3.682,
+        moduleConfig,
+        ModuleLocations.frontLeft,
+        ModuleLocations.frontRight,
+        ModuleLocations.backLeft,
+        ModuleLocations.backRight);
   }
 
   public static final class ArmConstants {

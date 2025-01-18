@@ -4,10 +4,15 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.studica.frc.AHRS;
 
 import cowlib.SwerveModule;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,12 +25,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.RobotConfigInfo;
 import frc.robot.Constants.DriveConstants.ModuleLocations;
 import frc.robot.Constants.DriveConstants.SwerveModules;
+import frc.robot.Constants.PathPlannerConstants.RotationPID;
+import frc.robot.Constants.PathPlannerConstants.TranslationPID;
 
 public class Drivebase extends SubsystemBase {
   private final double DRIVE_REDUCTION = 1.0 / 6.75;
@@ -68,35 +77,55 @@ public class Drivebase extends SubsystemBase {
 
     odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
 
+    AutoBuilder.configure(
+        this::getPose,
+        this::resetPose,
+        this::getCurrentSpeeds,
+        this::drive,
+        new PPHolonomicDriveController(
+            new PIDConstants(TranslationPID.p, TranslationPID.i, TranslationPID.d),
+            new PIDConstants(RotationPID.p, RotationPID.i, RotationPID.d)),
+        RobotConfigInfo.robotConfig,
+        () -> {
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          } else {
+            return false;
+          }
+        },
+        this);
+
     // AutoBuilder.configureHolonomic(
     // this::getPose, // Robot pose supplier
     // this::resetPose, // Method to reset odometry (will be called if your auto has
-    // a starting pose)
+    // // a starting pose)
     // this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
     // this::drive, // Method that will drive the robot given ROBOT RELATIVE
-    // ChassisSpeeds
+    // // ChassisSpeeds
     // new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should
-    // likely live in your Constants class
+    // // likely live in your Constants class
     // new PIDConstants(TranslationPID.p, TranslationPID.i, TranslationPID.d), //
-    // Translation PID constants
+    // // Translation PID constants
     // new PIDConstants(RotationPID.p, RotationPID.i, RotationPID.d), // Rotation
-    // PID constants
+    // // PID constants
     // MAX_VELOCITY, // Max module speed, in m/s
     // ModuleLocations.robotRaduius, // Drive base radius in meters. Distance from
-    // robot center to furthest module.
+    // // robot center to furthest module.
     // new ReplanningConfig()), // Default path replanning config. See the API for
-    // the options here
+    // // the options here
 
     // // Boolean supplier that controls when the path will be mirrored for the red
     // // alliance
     // // This will flip the path being followed to the red side of the field.
     // // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
     // () -> {
-    // // var alliance = DriverStation.getAlliance();
-    // // if (alliance.isPresent()) {
-    // // return alliance.get() == DriverStation.Alliance.Red;
-    // // }
+    // var alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    // return alliance.get() = DriverStation.Alliance.Red;
+    // } else {
     // return false;
+    // }
     // },
     // this); // Reference to this subsystem to set requirements
 
@@ -136,7 +165,7 @@ public class Drivebase extends SubsystemBase {
     }
   }
 
-  private void drive(ChassisSpeeds speeds) {
+  public void drive(ChassisSpeeds speeds) {
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds,
         new Translation2d(Units.inchesToMeters(4), 0));
 
@@ -148,6 +177,10 @@ public class Drivebase extends SubsystemBase {
     this.backRight.drive(moduleStates[3]);
 
     SmartDashboard.putNumber("FL Target Angle", moduleStates[0].angle.getDegrees());
+  }
+
+  public void drive(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
+    drive(speeds);
   }
 
   public double getMaxVelocity() {
