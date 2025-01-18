@@ -72,8 +72,7 @@ public final class Constants {
         1);
 
     public static final RobotConfig robotConfig = new RobotConfig(
-        66.68,
-        3.682,
+        66.68, 3.682,
         moduleConfig,
         ModuleLocations.frontLeft,
         ModuleLocations.frontRight,
