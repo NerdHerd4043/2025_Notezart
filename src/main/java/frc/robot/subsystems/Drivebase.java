@@ -179,10 +179,6 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("FL Target Angle", moduleStates[0].angle.getDegrees());
   }
 
-  public void drive(ChassisSpeeds speeds, DriveFeedforwards feedforwards) {
-    drive(speeds);
-  }
-
   public double getMaxVelocity() {
     return MAX_VELOCITY;
   }

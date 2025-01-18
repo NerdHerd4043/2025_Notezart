@@ -31,11 +31,11 @@ public final class Constants {
     public static final int currentLimit = 40;
     public static final double slewRate = 20; // lower number for higher center of mass
     public static final int temp = 21;
-    private static final double DRIVE_REDUCTION = 1.0 / 6.75;
-    private static final double NEO_FREE_SPEED = 5820.0 / 60.0;
-    private static final double WHEEL_DIAMETER = 0.1016;
-    private static final double MAX_VELOCITY = NEO_FREE_SPEED * DRIVE_REDUCTION * WHEEL_DIAMETER * Math.PI;
-    private static final double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / (ModuleLocations.dist / Math.sqrt(2.0));
+    public static final double DRIVE_REDUCTION = 1.0 / 6.75;
+    public static final double NEO_FREE_SPEED = 5820.0 / 60.0;
+    public static final double WHEEL_DIAMETER = 0.1016;
+    public static final double MAX_VELOCITY = NEO_FREE_SPEED * DRIVE_REDUCTION * WHEEL_DIAMETER * Math.PI;
+    public static final double MAX_ANGULAR_VELOCITY = MAX_VELOCITY / (ModuleLocations.dist / Math.sqrt(2.0));
 
     public static final class SwervePID {
       public static final double p = 0.12;
@@ -61,7 +61,8 @@ public final class Constants {
   }
 
   public static final class RobotConfigInfo {
-    public final ModuleConfig moduleConfig = new ModuleConfig(
+
+    public static final ModuleConfig moduleConfig = new ModuleConfig(
         DriveConstants.WHEEL_DIAMETER,
         2.75,
         0.7,
@@ -70,8 +71,9 @@ public final class Constants {
         DriveConstants.currentLimit,
         1);
 
-    public RobotConfig robotConfig = new RobotConfig(
-        66.68, 3.682,
+    public static final RobotConfig robotConfig = new RobotConfig(
+        66.68,
+        3.682,
         moduleConfig,
         ModuleLocations.frontLeft,
         ModuleLocations.frontRight,
