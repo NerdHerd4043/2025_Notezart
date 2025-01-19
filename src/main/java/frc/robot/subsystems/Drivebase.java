@@ -4,9 +4,16 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.studica.frc.AHRS;
@@ -28,6 +35,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConfigInfo;
@@ -77,6 +85,15 @@ public class Drivebase extends SubsystemBase {
 
     odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
 
+    RobotConfig config;
+    try {
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      // Handle exception as needed
+      e.printStackTrace();
+      config = RobotConfigInfo.robotConfig;
+    }
+
     AutoBuilder.configure(
         this::getPose,
         this::resetPose,
@@ -85,7 +102,7 @@ public class Drivebase extends SubsystemBase {
         new PPHolonomicDriveController(
             new PIDConstants(TranslationPID.p, TranslationPID.i, TranslationPID.d),
             new PIDConstants(RotationPID.p, RotationPID.i, RotationPID.d)),
-        RobotConfigInfo.robotConfig,
+        config,
         () -> {
           var alliance = DriverStation.getAlliance();
           if (alliance.isPresent()) {
@@ -213,6 +230,29 @@ public class Drivebase extends SubsystemBase {
       positions[i] = modules[i].getPosition();
     }
     return positions;
+  }
+
+  public Command getAlignCommand() {
+    var initPos = new Pose2d(0, 2, Rotation2d.fromDegrees(90));
+
+    this.resetPose(initPos);
+
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+        initPos, new Pose2d(0, 1, Rotation2d.fromDegrees(0)), new Pose2d(0, 2, Rotation2d.fromDegrees(0)));
+
+    PathConstraints constraints = new PathConstraints(
+        2.750, // Max Velocity
+        2.183, // Max Acceleration
+        360, // Max Angular Velocity
+        360 // Max Angular Acceleration
+    );
+
+    PathPlannerPath path = new PathPlannerPath(waypoints, constraints, null,
+        new GoalEndState(0.0, Rotation2d.fromDegrees(0)));
+
+    path.preventFlipping = true;
+
+    return AutoBuilder.followPath(path);
   }
 
   @Override

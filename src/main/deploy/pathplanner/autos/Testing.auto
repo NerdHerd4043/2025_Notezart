@@ -5,21 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Shoot and Leave Red"
+            "pathName": "Testing"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Leave",
+  "folder": null,
   "choreoAuto": false
 }

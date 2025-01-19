@@ -247,43 +247,7 @@ public class RobotContainer {
   }
 
   private void configureNamedCommands() {
-    var shootComp = Commands.race(new Shoot(shooter, -0.96),
-        Commands.sequence(Commands.waitSeconds(0.80),
-            Commands.race(new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed), Commands.waitSeconds(0.25))));
 
-    // var armUp = Commands.sequence(
-    // Commands.runOnce(arm::armUp, arm),
-    // Commands.waitSeconds(0.75));
-
-    // var armDown = Commands.runOnce(arm::armDown, arm);
-
-    // var armDown = Commands.race(
-    // new MoveArm(arm, () -> ArmConstants.lowerArmSpeed),
-    // Commands.waitSeconds(1.5));
-
-    var ampShoot = Commands.race(
-        Commands.parallel(
-            new Shoot(shooter, ShooterConstants.shooterSpeed),
-            new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed)),
-        Commands.waitSeconds(0.4));
-
-    var defenceShoot = Commands.parallel(
-        new Shoot(shooter, -0.15),
-        new RunIntake(intake, 0.5, IntakeConstants.kickupSpeed));
-
-    var stopDefence = Commands.parallel(
-        new Shoot(shooter, 0),
-        new RunIntake(intake, 0, 0));
-
-    NamedCommands.registerCommand("Intake",
-        new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));
-    NamedCommands.registerCommand("Stop Intake",
-        new RunIntake(intake, 0, 0));
-    NamedCommands.registerCommand("Shoot", shootComp);
-    // NamedCommands.registerCommand("Amp Score", Commands.sequence(armUp, ampShoot,
-    // armDown));
-    NamedCommands.registerCommand("Defence Shoot", defenceShoot);
-    NamedCommands.registerCommand("Stop Defence Shoot", stopDefence);
   }
 
   // public void ledsOff() {
@@ -296,6 +260,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return drivebase.getAlignCommand();
   }
 }

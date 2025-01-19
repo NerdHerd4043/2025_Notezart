@@ -41,6 +41,14 @@ public class SwerveModule {
 
     speedMotorConfig.inverted(driveInverted);
 
+    double driveReduction = 1.0 / 6.75;
+    double WHEEL_DIAMETER = 0.1016;
+    double rotationsToDistance = driveReduction * WHEEL_DIAMETER * Math.PI;
+
+    speedMotorConfig.encoder
+        .positionConversionFactor(rotationsToDistance)
+        .velocityConversionFactor(rotationsToDistance);
+
     angleMotor.configure(angleMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     speedMotor.configure(speedMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -56,9 +64,6 @@ public class SwerveModule {
 
     // Set scaling factors
     this.speedEncoder = this.speedMotor.getEncoder();
-    double driveReduction = 1.0 / 6.75;
-    double WHEEL_DIAMETER = 0.1016;
-    double rotationsToDistance = driveReduction * WHEEL_DIAMETER * Math.PI;
   }
 
   public SwerveModule(SwerveModuleConfig config, double maxVelocity, double maxVoltage) {
