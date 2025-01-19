@@ -32,8 +32,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -77,6 +79,9 @@ public class Drivebase extends SubsystemBase {
 
   private BooleanEntry fieldOrientedEntry;
 
+  private SendableChooser<Double> driveSpeedChooser = new SendableChooser<>();
+  private SendableChooser<Boolean> fieldOriented = new SendableChooser<>();
+
   /** Creates a new Drivebase. */
   public Drivebase() {
     var inst = NetworkTableInstance.getDefault();
@@ -84,6 +89,18 @@ public class Drivebase extends SubsystemBase {
     this.fieldOrientedEntry = table.getBooleanTopic("Field Oriented").getEntry(true);
 
     odometry = new SwerveDriveOdometry(kinematics, gyro.getRotation2d(), getPositions());
+
+    this.driveSpeedChooser.setDefaultOption("Full Speed", 1.0);
+    this.driveSpeedChooser.addOption("Three-Quarter Speed", 0.75);
+    this.driveSpeedChooser.addOption("Half Speed", 0.5);
+    this.driveSpeedChooser.addOption("Quarter Speed", 0.25);
+    this.driveSpeedChooser.addOption("No Speed", 0.0);
+
+    this.fieldOriented.addOption("Field Oriented", true);
+    this.fieldOriented.addOption("Robot Oriented", false);
+
+    SmartDashboard.putData(this.driveSpeedChooser);
+    SmartDashboard.putData(this.fieldOriented);
 
     RobotConfig config;
     try {
@@ -175,7 +192,7 @@ public class Drivebase extends SubsystemBase {
       speedY = slewRateY.calculate(speedY);
     }
 
-    if (this.fieldOrientedEntry.get(true)) {
+    if (this.fieldOrientedEntry.get(this.getDefaultDrive())) {
       fieldOrientedDrive(speedX, speedY, rot);
     } else {
       robotOrientedDrive(speedX, speedY, rot);
@@ -186,7 +203,7 @@ public class Drivebase extends SubsystemBase {
     SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speeds,
         new Translation2d(Units.inchesToMeters(4), 0));
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY);
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, MAX_VELOCITY * getRobotSpeedRatio());
 
     this.frontLeft.drive(moduleStates[0]);
     this.frontRight.drive(moduleStates[1]);
@@ -255,6 +272,14 @@ public class Drivebase extends SubsystemBase {
     return AutoBuilder.followPath(path);
   }
 
+  public double getRobotSpeedRatio() {
+    return this.driveSpeedChooser.getSelected();
+  }
+
+  public boolean getDefaultDrive() {
+    return this.fieldOriented.getSelected();
+  }
+
   @Override
   public void periodic() {
     var positions = getPositions();
@@ -280,5 +305,7 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("FR Encoder", frontRight.getEncoder());
     SmartDashboard.putNumber("BR Encoder", backRight.getEncoder());
     SmartDashboard.putNumber("BL Encoder", backLeft.getEncoder());
+
+    SmartDashboard.putNumber("Speed Ratio", getRobotSpeedRatio());
   }
 }
