@@ -4,19 +4,19 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ArmConstants;
+// import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Climb;
+// import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
 import frc.robot.commands.HIDCommands.Rumble;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
-import frc.robot.commands.armCommands.MoveArm;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.CANdleSystem;
-import frc.robot.subsystems.Climber;
+// import frc.robot.commands.armCommands.MoveArm;
+// import frc.robot.subsystems.Arm;
+// import frc.robot.subsystems.CANdleSystem;
+// import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -68,7 +68,7 @@ public class RobotContainer {
 
   private SendableChooser<Command> autoChooser;
 
-  private double mapped = 0;
+  // private double mapped = 0;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

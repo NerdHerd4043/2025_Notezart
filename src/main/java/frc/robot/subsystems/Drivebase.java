@@ -14,12 +14,10 @@ import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
-import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.studica.frc.AHRS;
 
 import cowlib.SwerveModule;
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,7 +30,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -282,6 +279,7 @@ public class Drivebase extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
     var positions = getPositions();
 
     odometry.update(gyro.getRotation2d(), positions);
@@ -298,9 +296,6 @@ public class Drivebase extends SubsystemBase {
 
     SmartDashboard.putNumber("module output", modules[0].getDriveOutput());
 
-    // TODO: Sendables?
-    //
-    // This method will be called once per scheduler run
     SmartDashboard.putNumber("FL Encoder", frontLeft.getEncoder());
     SmartDashboard.putNumber("FR Encoder", frontRight.getEncoder());
     SmartDashboard.putNumber("BR Encoder", backRight.getEncoder());
