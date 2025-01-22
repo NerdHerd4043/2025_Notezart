@@ -23,7 +23,7 @@ import frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
+// import com.pathplanner.lib.auto.NamedCommands;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 

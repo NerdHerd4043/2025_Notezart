@@ -4,20 +4,20 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CANdleConstants;
+// import frc.robot.Constants.CANdleConstants;
 
-import java.util.function.BooleanSupplier;
+// import java.util.function.BooleanSupplier;
 
-import com.ctre.phoenix.led.Animation;
-import com.ctre.phoenix.led.CANdle;
-import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.led.ColorFlowAnimation;
-import com.ctre.phoenix.led.StrobeAnimation;
-import com.ctre.phoenix.led.CANdle.LEDStripType;
-import com.ctre.phoenix.led.CANdle.VBatOutputMode;
-import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+// import com.ctre.phoenix.led.Animation;
+// import com.ctre.phoenix.led.CANdle;
+// import com.ctre.phoenix.led.CANdleConfiguration;
+// import com.ctre.phoenix.led.ColorFlowAnimation;
+// import com.ctre.phoenix.led.StrobeAnimation;
+// import com.ctre.phoenix.led.CANdle.LEDStripType;
+// import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+// import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 
 public class CANdleSystem extends SubsystemBase {
   // private final CANdle candle = new CANdle(CANdleConstants.id, "rio");
@@ -31,17 +31,17 @@ public class CANdleSystem extends SubsystemBase {
    * These three values store our solid color data in the event we lack an
    * animation
    */
-  private int r, g, b;
+  // private int r, g, b;
 
   /*
    * This variable is the enum representation of our currently selected
    * annotation. It will be null if no animation is selected.
    */
-  private AnimationType currentAnimation;
+  // private AnimationType currentAnimation;
   /*
    * This stores the actual animation object from the CANdle API
    */
-  private Animation toAnimate;
+  // private Animation toAnimate;
 
   /** Creates a new CANdle. */
   public CANdleSystem() {
