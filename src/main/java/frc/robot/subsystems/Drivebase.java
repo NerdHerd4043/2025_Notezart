@@ -252,7 +252,10 @@ public class Drivebase extends SubsystemBase {
     this.resetPose(initPos);
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        initPos, new Pose2d(0, 1, Rotation2d.fromDegrees(0)), new Pose2d(0, 2, Rotation2d.fromDegrees(0)));
+        initPos,
+        new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
+        new Pose2d(-1, 0, Rotation2d.fromDegrees(0)),
+        new Pose2d(0, -2, Rotation2d.fromDegrees(0)));
 
     PathConstraints constraints = new PathConstraints(
         2.750, // Max Velocity
