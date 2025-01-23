@@ -42,6 +42,9 @@ import frc.robot.Constants.DriveConstants.ModuleLocations;
 import frc.robot.Constants.DriveConstants.SwerveModules;
 import frc.robot.Constants.PathPlannerConstants.RotationPID;
 import frc.robot.Constants.PathPlannerConstants.TranslationPID;
+import frc.robot.util.LimelightHelpers;
+import frc.robot.util.LimelightHelpers.LimelightResults;
+import frc.robot.util.LimelightHelpers.LimelightTarget_Fiducial;
 
 public class Drivebase extends SubsystemBase {
   private final double DRIVE_REDUCTION = 1.0 / 6.75;
@@ -247,7 +250,7 @@ public class Drivebase extends SubsystemBase {
   }
 
   public Command getAlignCommand() {
-    var initPos = new Pose2d(0, 2, Rotation2d.fromDegrees(90));
+    var initPos = new Pose2d(0, 2, Rotation2d.fromDegrees(0));
 
     this.resetPose(initPos);
 
@@ -270,6 +273,45 @@ public class Drivebase extends SubsystemBase {
     path.preventFlipping = true;
 
     return AutoBuilder.followPath(path);
+  }
+
+  public Command basicLimelightAuto() {
+    LimelightResults results = LimelightHelpers.getLatestResults("");
+    if (results.valid) {
+      if (results.targets_Fiducials.length > 0) {
+        LimelightTarget_Fiducial tag = results.targets_Fiducials[0];
+        Pose2d tagPose = tag.getTargetPose_CameraSpace2D();
+
+        final double xDist = tagPose.getX(); // May need to use tagPose.getMeasureX(), but that's of type Distance, so
+                                             // would complicate things
+        final double yDist = tagPose.getY();
+
+        var initPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+
+        this.resetPose(initPos);
+
+        List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+            initPos, new Pose2d(xDist * 0.8, yDist * 0.8, Rotation2d.fromDegrees(0)));
+
+        PathConstraints constraints = new PathConstraints(
+            2.750, // Max Velocity
+            2.183, // Max Acceleration
+            360, // Max Angular Velocity
+            360 // Max Angular Acceleration
+        );
+
+        PathPlannerPath path = new PathPlannerPath(waypoints, constraints, null,
+            new GoalEndState(0.0, Rotation2d.fromDegrees(0)));
+
+        path.preventFlipping = true;
+
+        return AutoBuilder.followPath(path);
+      } else {
+        return AutoBuilder.followPath(null);
+      }
+    } else {
+      return AutoBuilder.followPath(null);
+    }
   }
 
   public double getRobotSpeedRatio() {
