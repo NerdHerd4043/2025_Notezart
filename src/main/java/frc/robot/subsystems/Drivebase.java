@@ -78,6 +78,7 @@ public class Drivebase extends SubsystemBase {
 
   private SendableChooser<Double> driveSpeedChooser = new SendableChooser<>();
   private SendableChooser<Boolean> fieldOriented = new SendableChooser<>();
+  private SendableChooser<Double> offset; // Will eventually be from the distance sensor
 
   /** Creates a new Drivebase. */
   public Drivebase() {
@@ -95,6 +96,10 @@ public class Drivebase extends SubsystemBase {
 
     this.fieldOriented.addOption("Field Oriented", true);
     this.fieldOriented.addOption("Robot Oriented", false);
+
+    this.offset.addOption("Far", 1.0);
+    this.offset.addOption("Mid", 0.5);
+    this.offset.addOption("Close", 0.1);
 
     SmartDashboard.putData(this.driveSpeedChooser);
     SmartDashboard.putData(this.fieldOriented);
