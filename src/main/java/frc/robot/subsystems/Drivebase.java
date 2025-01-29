@@ -96,7 +96,7 @@ public class Drivebase extends SubsystemBase {
     this.driveSpeedChooser.addOption("Quarter Speed", 0.25);
     this.driveSpeedChooser.addOption("No Speed", 0.0);
 
-    this.fieldOriented.addOption("Field Oriented", true);
+    this.fieldOriented.setDefaultOption("Field Oriented", true);
     this.fieldOriented.addOption("Robot Oriented", false);
 
     SmartDashboard.putData(this.driveSpeedChooser);
@@ -256,10 +256,7 @@ public class Drivebase extends SubsystemBase {
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
         initPos,
-        new Pose2d(0, 1, Rotation2d.fromDegrees(0)),
-        new Pose2d(1, 1, Rotation2d.fromDegrees(0)),
-        new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
-        new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
+        new Pose2d(1, 0, Rotation2d.fromDegrees(90)));
 
     PathConstraints constraints = new PathConstraints(
         2.750, // Max Velocity
@@ -269,7 +266,7 @@ public class Drivebase extends SubsystemBase {
     );
 
     PathPlannerPath path = new PathPlannerPath(waypoints, constraints, null,
-        new GoalEndState(0.0, Rotation2d.fromDegrees(0)));
+        new GoalEndState(0.0, Rotation2d.fromDegrees(90)));
 
     path.preventFlipping = true;
 
@@ -285,7 +282,7 @@ public class Drivebase extends SubsystemBase {
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
         initPos,
-        new Pose2d(0, 0, Rotation2d.fromDegrees(angle)));
+        new Pose2d(0.5, 0, Rotation2d.fromDegrees(-angle)));
 
     PathConstraints constraints = new PathConstraints(
         2.750, // Max Velocity
@@ -295,7 +292,7 @@ public class Drivebase extends SubsystemBase {
     );
 
     PathPlannerPath path = new PathPlannerPath(waypoints, constraints, null,
-        new GoalEndState(0.0, Rotation2d.fromDegrees(0)));
+        new GoalEndState(0.0, Rotation2d.fromDegrees(-angle)));
 
     path.preventFlipping = true;
 
@@ -308,13 +305,14 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("Length", results.targets_Fiducials.length);
     // if (results.valid) {
     // if (results.targets_Fiducials.length > 0) {
-    LimelightTarget_Fiducial tag = results.targets_Fiducials[0];
+    // LimelightTarget_Fiducial tag = results.targets_Fiducials[0];
     double angle = LimelightHelpers.getTX("limelight-one");
-    Pose2d tagPose = tag.getTargetPose_CameraSpace2D();
+    // Pose2d tagPose = tag.getTargetPose_CameraSpace2D();
 
-    final double xDist = tagPose.getX(); // May need to use tagPose.getMeasureX(), but that's of type Distance,
-                                         // so would complicate things
-    final double yDist = tagPose.getY();
+    // final double xDist = tagPose.getX(); // May need to use
+    // tagPose.getMeasureX(), but that's of type Distance,
+    // so would complicate things
+    // final double yDist = tagPose.getY();
 
     var initPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
