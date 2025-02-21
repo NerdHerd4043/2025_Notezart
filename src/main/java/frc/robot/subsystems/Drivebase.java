@@ -29,6 +29,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.BooleanEntry;
+import edu.wpi.first.networktables.DoubleArraySubscriber;
+import edu.wpi.first.networktables.DoubleArrayTopic;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -42,6 +45,7 @@ import frc.robot.Constants.DriveConstants.ModuleLocations;
 import frc.robot.Constants.DriveConstants.SwerveModules;
 import frc.robot.Constants.PathPlannerConstants.RotationPID;
 import frc.robot.Constants.PathPlannerConstants.TranslationPID;
+import frc.robot.util.LimelightUtil;
 
 public class Drivebase extends SubsystemBase {
   private final double DRIVE_REDUCTION = 1.0 / 6.75;
@@ -80,6 +84,9 @@ public class Drivebase extends SubsystemBase {
   private SendableChooser<Boolean> fieldOriented = new SendableChooser<>();
   private SendableChooser<Double> offset; // Will eventually be from the distance sensor
 
+  private final DoubleArraySubscriber botFieldPose;
+  private double[] botFieldPoseArray;
+
   /** Creates a new Drivebase. */
   public Drivebase() {
     var inst = NetworkTableInstance.getDefault();
@@ -97,12 +104,17 @@ public class Drivebase extends SubsystemBase {
     this.fieldOriented.addOption("Field Oriented", true);
     this.fieldOriented.addOption("Robot Oriented", false);
 
-    this.offset.addOption("Far", 1.0);
-    this.offset.addOption("Mid", 0.5);
-    this.offset.addOption("Close", 0.1);
+    // this.offset.addOption("Far", 1.0);
+    // this.offset.addOption("Mid", 0.5);
+    // this.offset.addOption("Close", 0.1);
 
     SmartDashboard.putData(this.driveSpeedChooser);
     SmartDashboard.putData(this.fieldOriented);
+
+    NetworkTable LLTable = inst.getTable("limelight-one");
+    DoubleArrayTopic botPoseTopic = LLTable.getDoubleArrayTopic("botpose_wpiblue");
+    this.botFieldPose = botPoseTopic.subscribe(new double[6]);
+    this.botFieldPoseArray = this.botFieldPose.get();
 
     RobotConfig config;
     try {
@@ -288,27 +300,26 @@ public class Drivebase extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    var positions = getPositions();
+    var positions = this.getPositions();
 
-    odometry.update(gyro.getRotation2d(), positions);
-    var pose = getPose();
+    odometry.update(this.gyro.getRotation2d(), positions);
+    var pose = this.getPose();
 
     var translation = pose.getTranslation();
     var x = translation.getX();
     var y = translation.getY();
     var rotation = pose.getRotation().getDegrees();
-    SmartDashboard.putNumber("x", x);
-    SmartDashboard.putNumber("y", y);
-    SmartDashboard.putNumber("rot", rotation);
-    field.setRobotPose(getPose());
-
-    SmartDashboard.putNumber("module output", modules[0].getDriveOutput());
-
-    SmartDashboard.putNumber("FL Encoder", frontLeft.getEncoder());
-    SmartDashboard.putNumber("FR Encoder", frontRight.getEncoder());
-    SmartDashboard.putNumber("BR Encoder", backRight.getEncoder());
-    SmartDashboard.putNumber("BL Encoder", backLeft.getEncoder());
+    field.setRobotPose(this.getPose());
 
     SmartDashboard.putNumber("Speed Ratio", getRobotSpeedRatio());
+
+    SmartDashboard.putNumber("Gyro Angle", this.gyro.getAngle());
+
+    SmartDashboard.putNumber("Item 1", this.botFieldPoseArray[0]);
+    SmartDashboard.putNumber("Item 2", this.botFieldPoseArray[1]);
+    SmartDashboard.putNumber("Item 3", this.botFieldPoseArray[2]);
+    SmartDashboard.putNumber("Item 4", this.botFieldPoseArray[3]);
+    SmartDashboard.putNumber("Item 5", this.botFieldPoseArray[4]);
+    SmartDashboard.putNumber("Item 6", this.botFieldPoseArray[5]);
   }
 }
