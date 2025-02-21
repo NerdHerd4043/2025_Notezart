@@ -311,7 +311,7 @@ public class Drivebase extends SubsystemBase {
     var rotation = pose.getRotation().getDegrees();
     field.setRobotPose(this.getPose());
 
-    SmartDashboard.putNumber("Speed Ratio", getRobotSpeedRatio());
+    SmartDashboard.putNumber("Speed Ratio", this.getRobotSpeedRatio());
 
     SmartDashboard.putNumber("Gyro Angle", this.gyro.getAngle());
 
