@@ -208,6 +208,9 @@ public class RobotContainer {
     // Gyro Reset
     c_driveStick.povUp().onTrue(Commands.runOnce(gyro::reset));
 
+    // Auto thingy - Espen
+    // c_driveStick.povDown().onTrue(drivebase.rotateAutomatically());
+
     // Intake
     c_driveStick.leftBumper().whileTrue(Commands.parallel(
         new RunIntake(intake, IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed), // toggle intake on/off
@@ -260,6 +263,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return drivebase.getAlignCommand();
+    return drivebase.rotateAutomatically();
   }
 }

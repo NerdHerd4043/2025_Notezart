@@ -96,7 +96,7 @@ public class Drivebase extends SubsystemBase {
     this.driveSpeedChooser.addOption("Quarter Speed", 0.25);
     this.driveSpeedChooser.addOption("No Speed", 0.0);
 
-    this.fieldOriented.addOption("Field Oriented", true);
+    this.fieldOriented.setDefaultOption("Field Oriented", true);
     this.fieldOriented.addOption("Robot Oriented", false);
 
     SmartDashboard.putData(this.driveSpeedChooser);
@@ -250,15 +250,13 @@ public class Drivebase extends SubsystemBase {
   }
 
   public Command getAlignCommand() {
-    var initPos = new Pose2d(0, 2, Rotation2d.fromDegrees(0));
+    var initPos = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
     this.resetPose(initPos);
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
         initPos,
-        new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
-        new Pose2d(-1, 0, Rotation2d.fromDegrees(0)),
-        new Pose2d(0, -2, Rotation2d.fromDegrees(0)));
+        new Pose2d(1, 0, Rotation2d.fromDegrees(90)));
 
     PathConstraints constraints = new PathConstraints(
         2.750, // Max Velocity
@@ -268,7 +266,7 @@ public class Drivebase extends SubsystemBase {
     );
 
     PathPlannerPath path = new PathPlannerPath(waypoints, constraints, null,
-        new GoalEndState(0.0, Rotation2d.fromDegrees(0)));
+        new GoalEndState(0.0, Rotation2d.fromDegrees(90)));
 
     path.preventFlipping = true;
 
@@ -308,5 +306,7 @@ public class Drivebase extends SubsystemBase {
     SmartDashboard.putNumber("BL Encoder", backLeft.getEncoder());
 
     SmartDashboard.putNumber("Speed Ratio", getRobotSpeedRatio());
+
+    SmartDashboard.putBoolean("Target", LimelightHelpers.getTV("limelight-one"));
   }
 }
