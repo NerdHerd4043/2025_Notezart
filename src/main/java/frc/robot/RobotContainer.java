@@ -81,10 +81,10 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", autoChooser);
 
     // Configure the trigger bindings
-    drivebase.setDefaultCommand(
-        new Drive(drivebase,
-            () -> getScaledXY(),
-            () -> scaleRotationAxis(driveStick.getRightX())));
+    //drivebase.setDefaultCommand(
+    //    new Drive(drivebase,
+    //        () -> getScaledXY(),
+    //       () -> scaleRotationAxis(driveStick.getRightX())));
 
     // arm.setDefaultCommand(
     // new MoveArm(arm,
@@ -125,10 +125,10 @@ public class RobotContainer {
   // }
 
   private double[] getXY() {
-    double[] xy = new double[2];
-    xy[0] = deadband(driveStick.getLeftX(), DriveConstants.deadband);
-    xy[1] = deadband(driveStick.getLeftY(), DriveConstants.deadband);
-    return xy;
+    //double[] xy = new double[2];
+    //xy[0] = deadband(driveStick.getLeftX(), DriveConstants.deadband);
+    //xy[1] = deadband(driveStick.getLeftY(), DriveConstants.deadband);
+    //return xy;
   }
 
   private double[] getScaledXY() {
@@ -139,7 +139,7 @@ public class RobotContainer {
     double theta = Math.atan2(xy[1], xy[0]);
 
     // Square radius and scale by max velocity
-    r = r * r * drivebase.getMaxVelocity();
+    //r = r * r * drivebase.getMaxVelocity();
 
     // Convert to Cartesian coordinates
     xy[0] = r * Math.cos(theta);
