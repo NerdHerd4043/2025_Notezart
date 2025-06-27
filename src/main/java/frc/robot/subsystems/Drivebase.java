@@ -96,7 +96,7 @@ public class Drivebase extends SubsystemBase {
     this.driveSpeedChooser.addOption("Quarter Speed", 0.25);
     this.driveSpeedChooser.addOption("No Speed", 0.0);
 
-    this.fieldOriented.addOption("Field Oriented", true);
+    this.fieldOriented.setDefaultOption("Field Oriented", true);
     this.fieldOriented.addOption("Robot Oriented", false);
 
     SmartDashboard.putData(this.driveSpeedChooser);
