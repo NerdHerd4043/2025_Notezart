@@ -154,16 +154,16 @@ public class Drivebase extends SubsystemBase {
   }
 
   public void defaultDrive(double speedX, double speedY, double rot, boolean slew) {
-    if (slew) {
-      speedX = slewRateX.calculate(speedX);
-      speedY = slewRateY.calculate(speedY);
-    }
+    // if (slew) {
+    //   speedX = slewRateX.calculate(speedX);
+    //   speedY = slewRateY.calculate(speedY);
+    // }
 
-    if (this.fieldOrientedEntry.get(this.getDefaultDrive())) {
-      fieldOrientedDrive(speedX, speedY, rot);
-    } else {
-      robotOrientedDrive(speedX, speedY, rot);
-    }
+    // if (this.fieldOrientedEntry.get(this.getDefaultDrive())) {
+    //   fieldOrientedDrive(speedX, speedY, rot);
+    // } else {
+    //   robotOrientedDrive(speedX, speedY, rot);
+    // }
   }
 
   public void drive(ChassisSpeeds speeds) {

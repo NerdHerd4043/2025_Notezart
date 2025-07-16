@@ -4,26 +4,26 @@
 
 package frc.robot;
 
-// import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-// import frc.robot.commands.Climb;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Drive;
 import frc.robot.commands.HIDCommands.Rumble;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
-// import frc.robot.commands.armCommands.MoveArm;
-// import frc.robot.subsystems.Arm;
-// import frc.robot.subsystems.CANdleSystem;
-// import frc.robot.subsystems.Climber;
+import frc.robot.commands.armCommands.MoveArm;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.CANdleSystem;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
-// import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -54,11 +54,11 @@ public class RobotContainer {
   private final DigitalInput beamBreak = new DigitalInput(0);
 
   private final Drivebase drivebase = new Drivebase();
-  // private final Arm arm = new Arm();
+  private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
-  // private final Climber climber = new Climber();
-  // private final CANdleSystem candle = new CANdleSystem();
+  private final Climber climber = new Climber();
+  private final CANdleSystem candle = new CANdleSystem();
 
   private static XboxController driveStick = new XboxController(0);
 
@@ -68,7 +68,7 @@ public class RobotContainer {
 
   private SendableChooser<Command> autoChooser;
 
-  // private double mapped = 0;
+  private double mapped = 0;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -86,10 +86,10 @@ public class RobotContainer {
             () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
-    // arm.setDefaultCommand(
-    // new MoveArm(arm,
-    // () -> getArmControl(driveStick.getRightTriggerAxis() -
-    // driveStick.getLeftTriggerAxis())));
+    arm.setDefaultCommand(
+        new MoveArm(arm,
+            () -> getArmControl(driveStick.getRightTriggerAxis() -
+                driveStick.getLeftTriggerAxis())));
 
     // candle.setDefaultCommand(
     // candle.getDefaultCommand(
@@ -112,17 +112,17 @@ public class RobotContainer {
     }
   }
 
-  // private double getArmControl(double trigger) {
-  // if (trigger > 0) {
-  // mapped = trigger * ArmConstants.raiseArmSpeed;
-  // } else if (trigger < 0) {
-  // mapped = -trigger * ArmConstants.lowerArmSpeed;
-  // } else {
-  // mapped = 0;
-  // }
+  private double getArmControl(double trigger) {
+    if (trigger > 0) {
+      mapped = trigger * ArmConstants.raiseArmSpeed;
+    } else if (trigger < 0) {
+      mapped = -trigger * ArmConstants.lowerArmSpeed;
+    } else {
+      mapped = 0;
+    }
 
-  // return mapped;
-  // }
+    return mapped;
+  }
 
   private double[] getXY() {
     double[] xy = new double[2];
@@ -139,7 +139,7 @@ public class RobotContainer {
     double theta = Math.atan2(xy[1], xy[0]);
 
     // Square radius and scale by max velocity
-    r = r * r * drivebase.getMaxVelocity();
+    // r = r * r * drivebase.getMaxVelocity();
 
     // Convert to Cartesian coordinates
     xy[0] = r * Math.cos(theta);
