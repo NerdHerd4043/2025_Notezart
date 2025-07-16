@@ -231,7 +231,7 @@ public class RobotContainer {
                 new WaitCommand(0.5))));
 
     // // Set arm to podium angle
-    // c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
+    c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
 
     // Spit out note
     c_driveStick.start()
