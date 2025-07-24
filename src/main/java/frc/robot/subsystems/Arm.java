@@ -136,6 +136,6 @@ public class Arm extends SubsystemBase {
 
     SmartDashboard.putNumber("ArmGoal", this.pidController.getGoal().position);
     SmartDashboard.putNumber("pos", getMeasurement());
-    // SmartDashboard.putNumber("encoder", getEncoder());
+    SmartDashboard.putNumber("encoder", getEncoder());
   }
 }
