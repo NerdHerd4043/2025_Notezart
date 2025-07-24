@@ -85,7 +85,8 @@ public final class Constants {
     public static final int rightArmMotorID = 15;
     public static final int encoderID = 25;
     public static final double raiseArmSpeed = 1;
-    public static final double lowerArmSpeed = -1;
+    public static final int lowerArmSpeed = -1;
+    public static final int motorCurrentLimit = 40;
 
     public static final class PIDValues {
       public static final double p = 4;
@@ -100,12 +101,12 @@ public final class Constants {
     }
 
     public static final class ArmPositions {
-      public static final double lower = 0;
+      public static final double lower = 0.3;
       public static final double lowerRad = lower;
-      public static final double upper = 0.28;
+      public static final double upper = 2.08;
       public static final double upperRad = upper * 2 * Math.PI;
 
-      public static final double podium = 0.1;
+      public static final double podium = 0.45;
     }
   }
 

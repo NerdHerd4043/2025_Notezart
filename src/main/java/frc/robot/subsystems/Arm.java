@@ -14,18 +14,20 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.ArmPositions;
 import frc.robot.Constants.ArmConstants.FeedForwardValues;
 import frc.robot.Constants.ArmConstants.PIDValues;
 
+@Logged
 public class Arm extends SubsystemBase {
   private SparkMax leftArmMotor = new SparkMax(ArmConstants.leftArmMotorID,
       MotorType.kBrushless);
@@ -51,14 +53,21 @@ public class Arm extends SubsystemBase {
 
   // /** Creates a new ProfPIDArm. */
   public Arm() {
+
     SparkMaxConfig leftArmMotorConfig = new SparkMaxConfig();
     SparkMaxConfig rightArmMotorConfig = new SparkMaxConfig();
 
     leftArmMotorConfig.idleMode(IdleMode.kBrake);
     rightArmMotorConfig.idleMode(IdleMode.kBrake);
 
-    leftArmMotorConfig.follow(ArmConstants.rightArmMotorID);
-    rightArmMotorConfig.inverted(true);
+    // current limit
+    leftArmMotorConfig.smartCurrentLimit(ArmConstants.motorCurrentLimit);
+    rightArmMotorConfig.smartCurrentLimit(ArmConstants.motorCurrentLimit);
+
+    // set follow
+    leftArmMotorConfig.follow(ArmConstants.rightArmMotorID, true);
+    // leftArmMotorConfig.inverted(true);
+    // rightArmMotorConfig.inverted(false);
 
     rightArmMotorConfig.limitSwitch.reverseLimitSwitchType(LimitSwitchConfig.Type.kNormallyClosed);
 
@@ -109,11 +118,11 @@ public class Arm extends SubsystemBase {
   }
 
   public void armUp() {
-    setTarget(ArmPositions.upperRad);
+    setTarget(ArmPositions.lowerRad);
   }
 
   public void armDown() {
-    setTarget(ArmPositions.lowerRad);
+    setTarget(ArmPositions.upperRad);
   }
 
   public double getEncoder() {
@@ -127,6 +136,10 @@ public class Arm extends SubsystemBase {
   public double getMeasurement() {
     // Return the process variable measurement here
     return getEncoderRadians();
+  }
+
+  public Command runArmDown() {
+    return this.runOnce(() -> this.armDown());
   }
 
   @Override
