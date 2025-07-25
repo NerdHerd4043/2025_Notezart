@@ -111,7 +111,7 @@ public class Arm extends SubsystemBase {
 
   public void armPodium() {
     if (podium) {
-      setTarget(ArmPositions.lowerRad);
+      setTarget(ArmPositions.upperRad);
     } else {
       setTarget(ArmPositions.podium, true);
     }

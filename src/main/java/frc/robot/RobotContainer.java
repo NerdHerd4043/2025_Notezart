@@ -241,6 +241,9 @@ public class RobotContainer {
     // Set arm down
     c_driveStick.y().onTrue(Commands.runOnce(arm::armDown, arm));
 
+    // Set arm up
+    c_driveStick.x().onTrue(Commands.runOnce(arm::armUp, arm));
+
     // Spit out note
     c_driveStick.start()
         .whileTrue(new RunIntake(intake, -IntakeConstants.intakeSpeed, -IntakeConstants.kickupSpeed));

@@ -104,7 +104,7 @@ public final class Constants {
       public static final double lower = 0.3;
       public static final double lowerRad = lower;
       public static final double upper = 2.08;
-      public static final double upperRad = upper * 2 * Math.PI;
+      public static final double upperRad = upper;
 
       public static final double podium = 0.45;
     }
