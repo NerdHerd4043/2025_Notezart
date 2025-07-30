@@ -53,7 +53,6 @@ public class Arm extends SubsystemBase {
 
   // /** Creates a new ProfPIDArm. */
   public Arm() {
-
     SparkMaxConfig leftArmMotorConfig = new SparkMaxConfig();
     SparkMaxConfig rightArmMotorConfig = new SparkMaxConfig();
 
@@ -75,6 +74,8 @@ public class Arm extends SubsystemBase {
         PersistMode.kPersistParameters);
     rightArmMotor.configure(rightArmMotorConfig, ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
+
+    this.rightReverseLimitSwitch = this.rightArmMotor.getReverseLimitSwitch();
 
     this.pidController.setGoal(getEncoderRadians());
   }

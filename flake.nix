@@ -10,6 +10,7 @@
       # System types to support.
       supportedSystems = [
         "x86_64-linux"
+        "aarch64-linux"
       ];
 
       forAllSystems = _args:
