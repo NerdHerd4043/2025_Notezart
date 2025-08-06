@@ -81,6 +81,10 @@ public class Drivebase extends SubsystemBase {
 
   private SendableChooser<Double> driveSpeedChooser = new SendableChooser<>();
   private SendableChooser<Boolean> fieldOriented = new SendableChooser<>();
+  private SendableChooser<Double> pChooser = new SendableChooser<>();
+  private SendableChooser<Double> iChooser = new SendableChooser<>();
+  private SendableChooser<Double> dChooser = new SendableChooser<>();
+  private SendableChooser<Double> gChooser = new SendableChooser<>();
 
   /** Creates a new Drivebase. */
   public Drivebase() {
@@ -185,7 +189,12 @@ public class Drivebase extends SubsystemBase {
   }
 
   public double getMaxAngleVelocity() {
-    return MAX_ANGULAR_VELOCITY;
+
+    if (this.driveSpeedChooser.getSelected() == 0) {
+      return 0;
+    } else {
+      return MAX_ANGULAR_VELOCITY;
+    }
   }
 
   public Pose2d getPose() {

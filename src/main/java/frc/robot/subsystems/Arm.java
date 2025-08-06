@@ -19,6 +19,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,9 +35,20 @@ public class Arm extends SubsystemBase {
   private SparkMax rightArmMotor = new SparkMax(ArmConstants.rightArmMotorID,
       MotorType.kBrushless);
 
+  // cchooser
+  private SendableChooser<Double> pChooser = new SendableChooser<>();
+  private SendableChooser<Double> iChooser = new SendableChooser<>();
+  private SendableChooser<Double> dChooser = new SendableChooser<>();
+  private SendableChooser<Double> gChooser = new SendableChooser<>();
+
+  private double p = pChooser.getSelected();
+  private double i = iChooser.getSelected();
+  private double d = dChooser.getSelected();
+  private double g = gChooser.getSelected();
+
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
   private ArmFeedforward feedforward = new ArmFeedforward(FeedForwardValues.kS,
-      FeedForwardValues.kG,
+      this.g,
       FeedForwardValues.kV);
 
   private double ffOutput;
@@ -46,15 +58,62 @@ public class Arm extends SubsystemBase {
   private SparkLimitSwitch rightReverseLimitSwitch;
 
   private ProfiledPIDController pidController = new ProfiledPIDController(
-      PIDValues.p,
-      PIDValues.i,
-      PIDValues.d,
+      this.p,
+      this.i,
+      this.d,
       new TrapezoidProfile.Constraints(6, 5));
 
   // /** Creates a new ProfPIDArm. */
   public Arm() {
     SparkMaxConfig leftArmMotorConfig = new SparkMaxConfig();
     SparkMaxConfig rightArmMotorConfig = new SparkMaxConfig();
+
+    // update pid variable thing
+    // pCHooser
+    this.pChooser.setDefaultOption("1.0", 1.0);
+    this.pChooser.addOption("0", 0.0);
+    this.pChooser.addOption("0.5", 0.5);
+    this.pChooser.addOption("1.0", 1.0);
+    this.pChooser.addOption("1.5", 1.5);
+    this.pChooser.addOption("2.0", 2.0);
+    this.pChooser.addOption("2.5", 2.5);
+    this.pChooser.addOption("3", 3.0);
+    this.pChooser.addOption("3.5", 3.5);
+    // iCHooser
+    this.iChooser.setDefaultOption("0 dude.0", 0.0);
+    this.iChooser.addOption("0.0", 0.0);
+    this.iChooser.addOption("0.5", 0.5);
+    this.iChooser.addOption("1.0", 1.0);
+    this.iChooser.addOption("1.5", 1.5);
+    this.iChooser.addOption("2.0", 2.0);
+    this.iChooser.addOption("2.5", 2.5);
+    this.iChooser.addOption("3.0", 3.0);
+    this.iChooser.addOption("3.5", 3.5);
+    // dCHooser
+    this.dChooser.setDefaultOption("zero", 0.0);
+    this.dChooser.addOption("0.0", 0.0);
+    this.dChooser.addOption("0.5", 0.5);
+    this.dChooser.addOption("1.0", 1.0);
+    this.dChooser.addOption("1.5", 1.5);
+    this.dChooser.addOption("2", 2.0);
+    this.dChooser.addOption("2.5", 2.5);
+    this.dChooser.addOption("3", 3.0);
+    this.dChooser.addOption("3.5", 3.5);
+    // dCHooser
+    this.gChooser.setDefaultOption("1", 1.0);
+    this.gChooser.addOption("0", 0.0);
+    this.gChooser.addOption("0.5", 0.5);
+    this.gChooser.addOption("1", 1.0);
+    this.gChooser.addOption("1.5", 1.5);
+    this.gChooser.addOption("2", 2.0);
+    this.gChooser.addOption("2.5", 2.5);
+    this.gChooser.addOption("3", 3.0);
+    this.gChooser.addOption("3.5", 3.5);
+
+    SmartDashboard.putData(this.pChooser);
+    SmartDashboard.putData(this.iChooser);
+    SmartDashboard.putData(this.dChooser);
+    SmartDashboard.putData(this.gChooser);
 
     leftArmMotorConfig.idleMode(IdleMode.kBrake);
     rightArmMotorConfig.idleMode(IdleMode.kBrake);
@@ -147,6 +206,11 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     useOutput(pidController.calculate(getMeasurement()),
         pidController.getSetpoint());
+
+    this.p = this.pChooser.getSelected();
+    this.i = this.iChooser.getSelected();
+    this.d = this.dChooser.getSelected();
+    this.g = this.gChooser.getSelected();
 
     SmartDashboard.putNumber("ArmGoal", this.pidController.getGoal().position);
     SmartDashboard.putNumber("pos", getMeasurement());
