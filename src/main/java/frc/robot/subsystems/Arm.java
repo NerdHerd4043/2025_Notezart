@@ -19,6 +19,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +43,8 @@ public class Arm extends SubsystemBase {
   private SendableChooser<Double> iChooser = new SendableChooser<>();
   private SendableChooser<Double> dChooser = new SendableChooser<>();
   private SendableChooser<Double> gChooser = new SendableChooser<>();
+
+  // set name
 
   private double p = 0.0;
   private double i = 0.0;
@@ -70,6 +75,7 @@ public class Arm extends SubsystemBase {
 
     // update pid variable thing
     // pCHooser
+
     this.pChooser.setDefaultOption("1.0", 1.0);
     this.pChooser.addOption("0", 0.0);
     this.pChooser.addOption("0.5", 0.5);
@@ -109,6 +115,29 @@ public class Arm extends SubsystemBase {
     this.gChooser.addOption("2.5", 2.5);
     this.gChooser.addOption("3", 3.0);
     this.gChooser.addOption("3.5", 3.5);
+
+    // tabber
+    ShuffleboardTab tab = Shuffleboard.getTab("PID-chooser");
+
+    tab.add("P-Chooser", pChooser)
+        .withWidget(BuiltInWidgets.kComboBoxChooser)
+        .withPosition(0, 0)
+        .withSize(2, 1);
+
+    tab.add("I-Chooser", iChooser)
+        .withWidget(BuiltInWidgets.kComboBoxChooser)
+        .withPosition(0, 0)
+        .withSize(2, 1);
+
+    tab.add("D-Chooser", dChooser)
+        .withWidget(BuiltInWidgets.kComboBoxChooser)
+        .withPosition(0, 0)
+        .withSize(2, 1);
+
+    tab.add("G-Chooser", gChooser)
+        .withWidget(BuiltInWidgets.kComboBoxChooser)
+        .withPosition(0, 0)
+        .withSize(2, 1);
 
     SmartDashboard.putData(this.pChooser);
     SmartDashboard.putData(this.iChooser);
