@@ -41,10 +41,10 @@ public class Arm extends SubsystemBase {
   private SendableChooser<Double> dChooser = new SendableChooser<>();
   private SendableChooser<Double> gChooser = new SendableChooser<>();
 
-  private double p = pChooser.getSelected();
-  private double i = iChooser.getSelected();
-  private double d = dChooser.getSelected();
-  private double g = gChooser.getSelected();
+  private double p = 0.0;
+  private double i = 0.0;
+  private double d = 0.0;
+  private double g = 0.0;
 
   private CANcoder encoder = new CANcoder(ArmConstants.encoderID);
   private ArmFeedforward feedforward = new ArmFeedforward(FeedForwardValues.kS,

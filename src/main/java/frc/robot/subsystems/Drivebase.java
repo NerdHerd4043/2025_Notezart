@@ -81,10 +81,6 @@ public class Drivebase extends SubsystemBase {
 
   private SendableChooser<Double> driveSpeedChooser = new SendableChooser<>();
   private SendableChooser<Boolean> fieldOriented = new SendableChooser<>();
-  private SendableChooser<Double> pChooser = new SendableChooser<>();
-  private SendableChooser<Double> iChooser = new SendableChooser<>();
-  private SendableChooser<Double> dChooser = new SendableChooser<>();
-  private SendableChooser<Double> gChooser = new SendableChooser<>();
 
   /** Creates a new Drivebase. */
   public Drivebase() {
