@@ -66,41 +66,8 @@ public class Arm extends SubsystemBase {
     leftArmMotorConfig.idleMode(IdleMode.kBrake);
     rightArmMotorConfig.idleMode(IdleMode.kBrake);
 
-    // Declare PID sendables for P
-    this.PChooser.addOption("2", 2.0);
-    this.PChooser.addOption("3", 3.0);
-    this.PChooser.setDefaultOption("4", 4.0);
-    this.PChooser.addOption("5", 5.0);
-    this.PChooser.addOption("6", 6.0);
-
-    // Declare PID sendables for I
-    this.IChooser.setDefaultOption("0", 0.0);
-    this.IChooser.addOption("0.2", 0.2);
-    this.IChooser.addOption("0.4", 0.4);
-    this.IChooser.addOption("0.6", 0.6);
-    this.IChooser.addOption("0.8", 0.8);
-
-    // Declare PID sendables for D
-    this.DChooser.addOption("1.0", 1.0);
-    this.DChooser.addOption("1.3", 1.3);
-    this.DChooser.setDefaultOption("1.7", 1.7);
-    this.DChooser.addOption("1.9", 1.9);
-    this.DChooser.addOption("2.1", 2.1);
-
-    // Push to dashboard
-    SmartDashboard.putData(this.PChooser);
-    SmartDashboard.putData(this.IChooser);
-    SmartDashboard.putData(this.DChooser);
-
-    // update variables for selected chooser
-    double doubleP = PChooser.getSelected();
-    double doubleI = IChooser.getSelected();
-    double doubleD = DChooser.getSelected();
-
-    // update pidcontroller every tick from variables
-    pidController.setP(doubleP);
-    pidController.setI(doubleI);
-    pidController.setD(doubleD);
+    // tune the arm
+    SmartDashboard.putData(this.pidController);
 
     // current limit
     leftArmMotorConfig.smartCurrentLimit(ArmConstants.motorCurrentLimit);

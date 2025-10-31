@@ -59,7 +59,7 @@ public class RobotContainer {
   private final DigitalInput beamBreak = new DigitalInput(0);
 
   private final Drivebase drivebase = new Drivebase();
-  // private final Arm arm = new Arm();
+  private final Arm arm = new Arm();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
   // private final Climber climber = new Climber();
