@@ -19,6 +19,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,6 +43,12 @@ public class Arm extends SubsystemBase {
   private double ffOutput;
   private boolean podium = false;
 
+  // sendablechoosers
+
+  private SendableChooser<Double> PChooser = new SendableChooser<>();
+  private SendableChooser<Double> IChooser = new SendableChooser<>();
+  private SendableChooser<Double> DChooser = new SendableChooser<>();
+
   @SuppressWarnings("unused")
   private SparkLimitSwitch rightReverseLimitSwitch;
 
@@ -58,6 +65,42 @@ public class Arm extends SubsystemBase {
 
     leftArmMotorConfig.idleMode(IdleMode.kBrake);
     rightArmMotorConfig.idleMode(IdleMode.kBrake);
+
+    // Declare PID sendables for P
+    this.PChooser.addOption("2", 2.0);
+    this.PChooser.addOption("3", 3.0);
+    this.PChooser.setDefaultOption("4", 4.0);
+    this.PChooser.addOption("5", 5.0);
+    this.PChooser.addOption("6", 6.0);
+
+    // Declare PID sendables for I
+    this.IChooser.setDefaultOption("0", 0.0);
+    this.IChooser.addOption("0.2", 0.2);
+    this.IChooser.addOption("0.4", 0.4);
+    this.IChooser.addOption("0.6", 0.6);
+    this.IChooser.addOption("0.8", 0.8);
+
+    // Declare PID sendables for D
+    this.DChooser.addOption("1.0", 1.0);
+    this.DChooser.addOption("1.3", 1.3);
+    this.DChooser.setDefaultOption("1.7", 1.7);
+    this.DChooser.addOption("1.9", 1.9);
+    this.DChooser.addOption("2.1", 2.1);
+
+    // Push to dashboard
+    SmartDashboard.putData(this.PChooser);
+    SmartDashboard.putData(this.IChooser);
+    SmartDashboard.putData(this.DChooser);
+
+    // update variables for selected chooser
+    double doubleP = PChooser.getSelected();
+    double doubleI = IChooser.getSelected();
+    double doubleD = DChooser.getSelected();
+
+    // update pidcontroller every tick from variables
+    pidController.setP(doubleP);
+    pidController.setI(doubleI);
+    pidController.setD(doubleD);
 
     // current limit
     leftArmMotorConfig.smartCurrentLimit(ArmConstants.motorCurrentLimit);
@@ -116,6 +159,18 @@ public class Arm extends SubsystemBase {
     } else {
       setTarget(ArmPositions.podium, true);
     }
+  }
+
+  public double getPChooser() {
+    return this.PChooser.getSelected();
+  }
+
+  public double getIChooser() {
+    return this.IChooser.getSelected();
+  }
+
+  public double getDChooser() {
+    return this.DChooser.getSelected();
   }
 
   public void armUp() {
