@@ -103,12 +103,12 @@ public final class Constants {
     }
 
     public static final class ArmPositions {
-      public static final double lower = 0.33;
+      public static final double lower = 0.6285;
       public static final double lowerRad = lower;
-      public static final double upper = 0.1;
+      public static final double upper = 2.088;
       public static final double upperRad = upper;
 
-      public static final double podium = 0.2;
+      public static final double podium = 1.2;
     }
   }
 
