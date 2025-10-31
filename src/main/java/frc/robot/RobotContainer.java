@@ -16,10 +16,10 @@ import frc.robot.commands.armCommands.MoveArm;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.Arm;
-// import frc.robot.commands.armCommands.MoveArm;
-// import frc.robot.subsystems.Arm;
-// import frc.robot.subsystems.CANdleSystem;
-// import frc.robot.subsystems.Climber;
+import frc.robot.commands.armCommands.MoveArm;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.CANdleSystem;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -91,10 +91,10 @@ public class RobotContainer {
             () -> getScaledXY(),
             () -> scaleRotationAxis(driveStick.getRightX())));
 
-    // arm.setDefaultCommand(
-    // new MoveArm(arm,
-    // () -> getArmControl(driveStick.getRightTriggerAxis() -
-    // driveStick.getLeftTriggerAxis())));
+    arm.setDefaultCommand(
+        new MoveArm(arm,
+            () -> getArmControl(driveStick.getRightTriggerAxis() -
+                driveStick.getLeftTriggerAxis())));
 
     // candle.setDefaultCommand(
     // candle.getDefaultCommand(
@@ -236,13 +236,13 @@ public class RobotContainer {
                 new WaitCommand(0.5))));
 
     // Set arm to podium angle
-    // c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
+    c_driveStick.a().onTrue(Commands.runOnce(arm::armPodium, arm));
 
-    // // Set arm down
-    // c_driveStick.y().onTrue(Commands.runOnce(arm::armDown, arm));
+    // Set arm down
+    c_driveStick.y().onTrue(Commands.runOnce(arm::armDown, arm));
 
-    // // Set arm up
-    // c_driveStick.x().onTrue(Commands.runOnce(arm::armUp, arm));
+    // Set arm up
+    c_driveStick.x().onTrue(Commands.runOnce(arm::armUp, arm));
 
     // Spit out note
     c_driveStick.start()
