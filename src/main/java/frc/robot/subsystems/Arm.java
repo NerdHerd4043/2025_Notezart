@@ -152,6 +152,7 @@ public class Arm extends SubsystemBase {
     return encoder.getAbsolutePosition().getValueAsDouble();
   }
 
+  @Logged
   public double getEncoderRadians() {
     return getEncoder() * 2 * Math.PI;
   }
